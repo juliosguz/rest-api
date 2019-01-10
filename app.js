@@ -77,4 +77,19 @@ app.get('/v1/users/1/addresses/a1', (req, res) => {
     street: 'Por ahi 1'
   })
 })
+
+// Esto no se hace, plssss XD
+app.get('/getUsers', (req, res) => {
+  res.json([
+    {
+      id: 1,
+      name: 'sioy un mal nombre'
+    },
+    {
+      id: 2 ,
+      name: 'sioy un mal nombre 2'
+    },
+  ])
+})
+
 app.listen(process.env.TW_PORT)
