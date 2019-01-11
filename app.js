@@ -1,6 +1,11 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+const users = []
+
+app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   res.json({
@@ -8,19 +13,15 @@ app.get('/', (req, res) => {
   })
 })
 
+app.post('/users', (req, res) => {
+  users.push(req.body)
+  res.json({
+    message: 'Usuario agregado'
+  })
+})
+
 app.get('/users', (req, res) => {
-  res.json([
-    {
-      id: 1,
-      firstName: 'Julio',
-      email: 'juliosguz@gmail.com'
-    },
-    {
-      id: 2,
-      firstName: 'Cesar',
-      email: 'julio.sguz@gmail.com'
-    }
-  ])
+  res.json(users)
 })
 
 app.get('/products/p1', (req, res) => {
