@@ -3,25 +3,67 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
-const users = []
+const users = [
+  {
+    userId: '1',
+    username: 'juliosguz',
+    email: 'julio.sguz@gmail.com'
+  },
+  {
+    userId: '2',
+    username: 'juliosilva',
+    email: 'juliosilva@gmail.com'
+  },
+  {
+    userId: '3',
+    username: 'silvajulio',
+    email: 'silvajulio@gmail.com'
+  }
+]
 
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Bienvenido!! :D'
+app.get('/users', (req, res) => {
+  res.json(users)
+})
+
+// /collections/resource
+// /users/asd768hgasd8765asdjhg876
+
+app.get('/users/:userId', (req, res) => {
+  const userId = req.params.userId
+  const currentUser = users.find(user => {
+    return user.userId === userId
   })
+  res.json(currentUser ? currentUser : { message: 'Usuario no encontrado' })
 })
 
 app.post('/users', (req, res) => {
+  const newUser = req.body
+  newUser.creationDate = Date.now()
   users.push(req.body)
   res.json({
     message: 'Usuario agregado'
   })
 })
 
-app.get('/users', (req, res) => {
-  res.json(users)
+app.put('/users/:userId', (req, res) => {
+  const userId = req.params.userId
+  // const currentUser = users.find(user => {
+  //   return user.userId === userId
+  // })
+
+  if (users[userId]) {
+    users[userId].username = req.body.username
+  }
+
+  res.json(users[userId])
+})
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Bienvenido!! :D'
+  })
 })
 
 app.get('/products/p1', (req, res) => {
