@@ -1,27 +1,42 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 
-const users = [
-  {
-    userId: '1',
-    username: 'juliosguz',
-    email: 'julio.sguz@gmail.com'
-  },
-  {
-    userId: '2',
-    username: 'juliosilva',
-    email: 'juliosilva@gmail.com'
-  },
-  {
-    userId: '3',
-    username: 'silvajulio',
-    email: 'silvajulio@gmail.com'
-  }
-]
+const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser')
+const users = require('./users.mock')
 
 app.use(bodyParser.json())
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Bienvenido!! :D'
+  })
+})
+
+app.post('/auth/login', (req, res) => {
+  // Aqui agregar tu condicion de evaluacion de login
+  res.json({
+    token: jwt.sign({ twitch: 'https://www.twitch.tv/juliosguz' }, process.env.TW_SECRET)
+  })
+})
+
+app.use((req, res, next) => {
+  let token = req.headers.authorization
+  token = token ? token.split(' ')[1] : ''
+  try {
+    jwt.verify(token, process.env.TW_SECRET)
+    next()
+  } catch (error) {
+    res
+      .status(412)
+      .json({
+        message: 'Token invalido'
+      })
+  }
+})
+
+// AREA PROTEGIDA POR JWT
 
 app.get('/users', (req, res) => {
   res.json(users)
@@ -58,12 +73,6 @@ app.put('/users/:userId', (req, res) => {
   }
 
   res.json(users[userId])
-})
-
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Bienvenido!! :D'
-  })
 })
 
 app.get('/products/p1', (req, res) => {
@@ -129,9 +138,9 @@ app.get('/getUsers', (req, res) => {
       name: 'sioy un mal nombre'
     },
     {
-      id: 2 ,
+      id: 2,
       name: 'sioy un mal nombre 2'
-    },
+    }
   ])
 })
 
