@@ -8,18 +8,53 @@ const users = require('./users.mock')
 
 app.use(bodyParser.json())
 
+// HATEOAS
+// Hypermedia as the engine of application state
+
 app.get('/', (req, res) => {
   res.json({
     message: 'Bienvenido!! :D'
   })
 })
 
+const cats = [
+  {
+    name: 'El Pitus'
+  },
+  {
+    name: 'Luna'
+  }
+]
+
 app.get('/cats', (req, res) => {
   // Asi puedes obtener el query string desde una URL
   const queryString = req.query
   console.log('queryString', queryString)
   res.json({
-    message: 'Cats endpoint'
+    result: cats,
+    links: [
+      {
+        rel: 'self',
+        href: 'http://localhost:3030/cats',
+        type: 'GET'
+      }
+    ]
+  })
+})
+
+app.get('/cats/1', (req, res) => {
+  res.json({
+    ...cats[1],
+    links: [
+      {
+        rel: 'self',
+        href: 'http://localhost:3030/cats/1'
+      },
+      {
+        rel: 'cats',
+        href: 'http://localhost:3030/cats'
+      }
+    ]
   })
 })
 
