@@ -14,6 +14,15 @@ app.get('/', (req, res) => {
   })
 })
 
+app.get('/cats', (req, res) => {
+  // Asi puedes obtener el query string desde una URL
+  const queryString = req.query
+  console.log('queryString', queryString)
+  res.json({
+    message: 'Cats endpoint'
+  })
+})
+
 app.post('/auth/login', (req, res) => {
   // Aqui agregar tu condicion de evaluacion de login
   res.json({
